@@ -526,13 +526,6 @@
             }
         }
         
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            reportDateInput.value = new Date().toISOString().split('T')[0];
-            updateSalespersonDropdown();
-            document.getElementById('firebase-user-id').textContent = "Aplikasi siap digunakan!";
-        });
-        
         salesNameSelect.addEventListener('change', () => {
             salesData = [];
             updateTable();
