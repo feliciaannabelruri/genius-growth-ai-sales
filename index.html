@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genius Growth AI - Laporan Penjualan</title>
-    
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style type="text/tailwindcss">
         @layer base {
@@ -76,7 +74,7 @@
         <!-- Header -->
         <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-8 sm:p-12 text-center relative z-10 rounded-t-3xl">
             <h1 class="text-3xl sm:text-5xl font-extrabold mb-2">
-                🚀 Genius Growth AI
+             Genius Growth AI
             </h1>
             <p class="text-lg sm:text-xl font-medium opacity-90">
                 Excel Sales Report Generator
@@ -270,71 +268,14 @@
     </div>
 
     <!-- Scripts -->
-    <!-- Firebase Libraries -->
-    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, query, where, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        
-        // Firestore Debug Logging
-        setLogLevel('debug');
-        
-        // Global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    <script>
+        // Data Storage (in-memory untuk artifact environment)
+        let salesData = [];
+        let salespersons = new Set(['Audrey', 'Frendy', 'Sakura']);
 
-        // --- Firebase Initialization ---
-        let app, db, auth;
-        let userId = null;
-        let isAuthReady = false;
-
-        function initializeFirebase() {
-            try {
-                if (!firebaseConfig || Object.keys(firebaseConfig).length === 0) {
-                    console.error("Firebase config is missing or empty.");
-                    showMessage("Error: Firebase config is not available.", "bg-red-500");
-                    return;
-                }
-                app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        document.getElementById('firebase-user-id').textContent = `User ID: ${userId}`;
-                        isAuthReady = true;
-                        console.log("Firebase initialized and authenticated.", userId);
-                        loadSalespersons();
-                        loadReport();
-                    } else {
-                        userId = null;
-                        await signInAnonymously(auth);
-                    }
-                });
-
-                if (initialAuthToken) {
-                    signInWithCustomToken(auth, initialAuthToken).catch(error => {
-                        console.error("Custom token sign-in failed:", error);
-                        signInAnonymously(auth);
-                    });
-                } else {
-                    signInAnonymously(auth);
-                }
-            } catch (e) {
-                console.error("Firebase initialization failed:", e);
-                showMessage("Error: Firebase initialization failed.", "bg-red-500");
-            }
-        }
-
-        // --- DOM Elements ---
+        // DOM Elements
         const reportDateInput = document.getElementById('reportDate');
         const salesNameSelect = document.getElementById('salesName');
         const dailyTargetInput = document.getElementById('dailyTarget');
@@ -346,7 +287,6 @@
         const initialMessage = document.getElementById('initial-message');
         const loadingSpinner = document.getElementById('loading-spinner');
 
-        // Buttons and Modals
         const addSalesBtn = document.getElementById('add-sales-btn');
         const generateExcelBtn = document.getElementById('generate-excel-btn');
         const addSalespersonBtn = document.getElementById('add-salesperson-btn');
@@ -362,11 +302,7 @@
         
         const messageBox = document.getElementById('message-box');
 
-        // Data Storage
-        let salesData = [];
-        let salespersons = new Set(['Audrey', 'Frendy', 'Sakura']);
-
-        // --- Helper Functions ---
+        // Helper Functions
         function showMessage(message, bgColor) {
             messageBox.textContent = message;
             messageBox.className = `message-box fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg font-semibold text-white transition-all duration-300 transform translate-y-0 opacity-100 ${bgColor}`;
@@ -398,114 +334,13 @@
             }, 300);
         }
 
-        // --- Firebase Functions ---
-        async function loadSalespersons() {
-            if (!isAuthReady) return;
-            try {
-                const salespersonsCollection = collection(db, `artifacts/${appId}/public/data/salespersons`);
-                onSnapshot(salespersonsCollection, (snapshot) => {
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        salespersons.add(data.name);
-                    });
-                    updateSalespersonDropdown();
-                });
-            } catch (error) {
-                console.error("Error loading salespersons:", error);
-                showMessage("Gagal memuat daftar sales.", "bg-red-500");
-            }
-        }
-
-        async function saveSalesperson(name) {
-            if (!isAuthReady) return;
-            try {
-                const salespersonsCollection = collection(db, `artifacts/${appId}/public/data/salespersons`);
-                await addDoc(salespersonsCollection, { name: name.trim() });
-                showMessage(`Nama sales '${name}' berhasil ditambahkan.`, "bg-green-500");
-            } catch (e) {
-                console.error("Error adding salesperson:", e);
-                showMessage("Gagal menambahkan nama sales.", "bg-red-500");
-            }
-        }
-        
-        async function loadReport() {
-            if (!isAuthReady) return;
-            const reportDate = reportDateInput.value;
-            const salesName = salesNameSelect.value;
-            const reportDocId = `${reportDate}_${salesName}`;
-            
-            initialMessage.style.display = 'none';
-            loadingSpinner.style.display = 'flex';
-            salesData = [];
-
-            try {
-                const reportDocRef = doc(db, `artifacts/${appId}/users/${userId}/salesReports`, reportDocId);
-                const docSnap = await getDoc(reportDocRef);
-
-                if (docSnap.exists()) {
-                    const report = docSnap.data();
-                    salesData = report.salesData || [];
-                    dailyTargetInput.value = report.dailyTarget;
-                    salesAreaInput.value = report.salesArea;
-                    salesTeamInput.value = report.salesTeam;
-                    salesContactInput.value = report.salesContact;
-                } else {
-                    // Reset fields for a new report
-                    dailyTargetInput.value = '';
-                    salesAreaInput.value = '';
-                    salesTeamInput.value = '';
-                    salesContactInput.value = '';
-                }
-            } catch (e) {
-                console.error("Error loading report:", e);
-                showMessage("Gagal memuat laporan.", "bg-red-500");
-            } finally {
-                updateTable();
-                updateSummary();
-                loadingSpinner.style.display = 'none';
-            }
-        }
-
-        async function saveReport() {
-            if (!isAuthReady) return;
-            const reportDate = reportDateInput.value;
-            const salesName = salesNameSelect.value;
-            const dailyTarget = parseFloat(dailyTargetInput.value) || 0;
-            const salesArea = salesAreaInput.value;
-            const salesTeam = salesTeamInput.value;
-            const salesContact = salesContactInput.value;
-            
-            const reportDocId = `${reportDate}_${salesName}`;
-            const reportDocRef = doc(db, `artifacts/${appId}/users/${userId}/salesReports`, reportDocId);
-            
-            const reportData = {
-                reportDate,
-                salesName,
-                dailyTarget,
-                salesArea,
-                salesTeam,
-                salesContact,
-                salesData,
-                createdAt: new Date()
-            };
-
-            try {
-                await setDoc(reportDocRef, reportData);
-                showMessage("Laporan berhasil disimpan!", "bg-green-500");
-            } catch (e) {
-                console.error("Error saving report:", e);
-                showMessage("Gagal menyimpan laporan.", "bg-red-500");
-            }
-        }
-        
-        async function deleteSale(index) {
+        function deleteSale(index) {
             salesData.splice(index, 1);
             updateTable();
             updateSummary();
-            await saveReport();
+            showMessage("Data berhasil dihapus!", "bg-green-500");
         }
 
-        // --- UI Update Functions ---
         function updateSalespersonDropdown() {
             salesNameSelect.innerHTML = '';
             const sortedSalespersons = Array.from(salespersons).sort();
@@ -584,14 +419,25 @@
             }
         }
         
-        // --- Event Listeners ---
+        // Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
             reportDateInput.value = new Date().toISOString().split('T')[0];
-            initializeFirebase();
+            updateSalespersonDropdown();
+            document.getElementById('firebase-user-id').textContent = "Aplikasi siap digunakan!";
         });
         
-        salesNameSelect.addEventListener('change', loadReport);
-        reportDateInput.addEventListener('change', loadReport);
+        salesNameSelect.addEventListener('change', () => {
+            salesData = [];
+            updateTable();
+            updateSummary();
+        });
+        
+        reportDateInput.addEventListener('change', () => {
+            salesData = [];
+            updateTable();
+            updateSummary();
+        });
+        
         dailyTargetInput.addEventListener('input', updateSummary);
 
         addSalespersonBtn.addEventListener('click', () => {
@@ -603,10 +449,12 @@
             hideModal(addSalespersonModal);
         });
 
-        saveNewSalespersonBtn.addEventListener('click', async () => {
+        saveNewSalespersonBtn.addEventListener('click', () => {
             const name = newSalespersonNameInput.value;
             if (name.trim()) {
-                await saveSalesperson(name);
+                salespersons.add(name.trim());
+                updateSalespersonDropdown();
+                showMessage(`Nama sales '${name}' berhasil ditambahkan.`, "bg-green-500");
                 hideModal(addSalespersonModal);
             } else {
                 showMessage("Nama tidak boleh kosong.", "bg-red-500");
@@ -630,7 +478,7 @@
             hideModal(addSalesModal);
         });
 
-        saveSalesBtn.addEventListener('click', async () => {
+        saveSalesBtn.addEventListener('click', () => {
             const newSale = {
                 no: salesData.length + 1,
                 waktu: document.getElementById('inputTime').value,
@@ -652,8 +500,8 @@
             salesData.push(newSale);
             updateTable();
             updateSummary();
-            await saveReport();
             hideModal(addSalesModal);
+            showMessage("Data penjualan berhasil ditambahkan!", "bg-green-500");
         });
 
         generateExcelBtn.addEventListener('click', () => {
@@ -701,7 +549,7 @@
             const totalSales = closingData.reduce((sum, item) => sum + item.total, 0);
             const totalProspects = salesData.length;
             const conversionRate = totalProspects > 0 ? (closingData.length / totalProspects * 100) : 0;
-            const targetAchievement = target > 0 ? (totalSales / target * 100) : 0;
+            const targetAchievement = dailyTarget > 0 ? (totalSales / dailyTarget * 100) : 0;
 
             // Status breakdown
             const statusCount = {};
@@ -720,7 +568,7 @@
                 ['💰 Total Penjualan:', formatCurrency(totalSales), '', '👥 Total Prospek:', totalProspects, '', '📈 Conversion Rate:', conversionRate.toFixed(1) + '%', '', ''],
                 ['🎯 Target Achievement:', targetAchievement.toFixed(1) + '%', '', '', '', '', '', '', '', ''],
                 ['', '', '', '', '', '', '', '', '', ''],
-                ['📋 Status Breakdown:', '', '', ...statusBreakdownData.flat()] // Flatten array for single row
+                ['📋 Status Breakdown:', '', '', ...statusBreakdownData.flat()]
             ];
 
             // Create worksheet
@@ -751,7 +599,7 @@
             showMessage(`✅ Laporan Excel berhasil diunduh!`, "bg-green-500");
         });
         
-        // Expose deleteSale to the global scope so it can be called from the table button
+        // Expose deleteSale to the global scope
         window.deleteSale = deleteSale;
         
     </script>
