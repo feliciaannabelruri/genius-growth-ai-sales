@@ -3,150 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel Sales Report Generator - Genius Growth AI</title>
-    <meta name="description" content="Generate professional Excel sales reports for Genius Growth AI team">
-    <meta name="keywords" content="sales report, excel generator, genius growth ai, daily sales">
-    <meta name="author" content="Genius Growth AI">
+    <title>Genius Growth AI - Laporan Penjualan</title>
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- External Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="header-content">
-                <h1>🚀 Genius Growth AI</h1>
-                <p>Excel Sales Report Generator</p>
-            </div>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main Container -->
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-6xl overflow-hidden relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-600 opacity-5"></div>
+
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-8 sm:p-12 text-center relative z-10 rounded-t-3xl">
+            <h1 class="text-3xl sm:text-5xl font-extrabold mb-2">
+                🚀 Genius Growth AI
+            </h1>
+            <p class="text-lg sm:text-xl font-medium opacity-90">
+                Excel Sales Report Generator
+            </p>
         </div>
-        
-        <div class="content">
-            <div class="form-section">
-                <h3 style="margin-bottom: 20px; color: #2c3e50; text-align: center;">📊 Setup Report Information</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>🗓️ Tanggal Report</label>
-                        <input type="date" id="reportDate">
+
+        <!-- Content -->
+        <div class="p-6 sm:p-10 relative z-10">
+            
+            <!-- Message Box -->
+            <div id="message-box" class="message-box fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg font-semibold text-white transition-all duration-300 transform -translate-y-full opacity-0" style="display: none;"></div>
+
+            <!-- Report Setup Form -->
+            <div class="bg-white p-6 rounded-2xl shadow-xl mb-8 border border-slate-200">
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-800 mb-6 text-center">📊 Pengaturan Laporan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="flex flex-col">
+                        <label for="reportDate" class="text-sm font-medium text-slate-600 mb-2">🗓️ Tanggal</label>
+                        <input type="date" id="reportDate" class="p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
                     </div>
-                    <div class="form-group">
-                        <label>👤 Nama Sales</label>
-                        <input type="text" id="salesName" placeholder="Masukkan nama sales">
+                    <div class="flex flex-col">
+                        <label for="salesName" class="text-sm font-medium text-slate-600 mb-2">👤 Nama Sales</label>
+                        <div class="relative">
+                            <select id="salesName" class="p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all w-full appearance-none pr-10">
+                                <option value="Audrey">Audrey</option>
+                                <option value="Frendy">Frendy</option>
+                                <option value="Sakura">Sakura</option>
+                            </select>
+                            <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>🎯 Target Harian (Rp)</label>
-                        <input type="number" id="dailyTarget" placeholder="Target penjualan">
+                    <div class="flex flex-col">
+                        <label for="dailyTarget" class="text-sm font-medium text-slate-600 mb-2">🎯 Target Harian (Rp)</label>
+                        <input type="number" id="dailyTarget" class="p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" placeholder="Mis. 15000000">
                     </div>
-                    <div class="form-group">
-                        <label>📍 Area/Wilayah</label>
-                        <input type="text" id="salesArea" placeholder="Area kerja">
+                    <div class="flex flex-col">
+                        <label for="salesArea" class="text-sm font-medium text-slate-600 mb-2">📍 Area/Wilayah</label>
+                        <input type="text" id="salesArea" class="p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" placeholder="Mis. Jakarta">
                     </div>
-                    <div class="form-group">
-                        <label>🏢 Tim/Divisi</label>
-                        <input type="text" id="salesTeam" placeholder="Nama tim">
+                    <div class="flex flex-col">
+                        <label for="salesTeam" class="text-sm font-medium text-slate-600 mb-2">🏢 Tim/Divisi</label>
+                        <input type="text" id="salesTeam" class="p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" placeholder="Mis. Team Alpha">
                     </div>
-                    <div class="form-group">
-                        <label>📱 Kontak Sales</label>
-                        <input type="text" id="salesContact" placeholder="No. HP/Email">
+                    <div class="flex flex-col">
+                        <label for="salesContact" class="text-sm font-medium text-slate-600 mb-2">📱 Kontak Sales</label>
+                        <input type="text" id="salesContact" class="p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" placeholder="Mis. 0812...">
                     </div>
+                </div>
+                <div class="flex justify-center mt-6">
+                    <button id="add-salesperson-btn" class="flex items-center space-x-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
+                        <span>Tambah Nama Sales Baru</span>
+                    </button>
                 </div>
             </div>
 
-            <div class="preview-section">
-                <h3>📋 Preview Data Penjualan</h3>
-                <div class="table-container">
-                    <table id="salesTable">
-                        <thead>
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button id="add-sales-btn" class="w-full sm:w-auto flex-1 flex items-center justify-center space-x-2 px-6 py-4 bg-blue-600 text-white font-semibold rounded-2xl shadow-xl hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 100 2h6a1 1 0 100-2h-6zM11 7a1 1 0 100 2h6a1 1 0 100-2h-6zM11 11a1 1 0 100 2h6a1 1 0 100-2h-6zM11 15a1 1 0 100 2h6a1 1 0 100-2h-6zM3 3a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1H4a1 1 0 01-1-1V3zM3 7a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1H4a1 1 0 01-1-1V7zM3 11a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1H4a1 1 0 01-1-1v-1zM3 15a1 1 0 011-1h1a1 1 0 011 1v1a1 1 0 01-1 1H4a1 1 0 01-1-1v-1z" /></svg>
+                    <span>Tambah Penjualan Baru</span>
+                </button>
+                <button id="generate-excel-btn" class="w-full sm:w-auto flex-1 flex items-center justify-center space-x-2 px-6 py-4 bg-emerald-500 text-white font-semibold rounded-2xl shadow-xl hover:bg-emerald-600 transition-all duration-300 transform hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.707-8.293a1 1 0 00-1.414 1.414L9 12.414l-3.707 3.707a1 1 0 101.414 1.414L11 13.828l3.707 3.707a1 1 0 001.414-1.414L12.414 12l3.707-3.707a1 1 0 00-1.414-1.414L11 10.586l-3.707-3.707z" clip-rule="evenodd" /></svg>
+                    <span>Download Excel Report</span>
+                </button>
+            </div>
+
+            <!-- Preview Table -->
+            <div class="bg-white p-6 rounded-2xl shadow-xl mb-8 border border-slate-200">
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-800 mb-6 text-center">📋 Preview Data Penjualan</h2>
+                <div id="loading-spinner" class="flex justify-center items-center py-8" style="display:none;">
+                    <div class="spinner !border-t-blue-500 w-10 h-10"></div>
+                </div>
+                <div class="overflow-x-auto rounded-xl border border-slate-300 shadow-md">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-800 text-white">
                             <tr>
-                                <th>No</th>
-                                <th>Waktu</th>
-                                <th>Nama Customer</th>
-                                <th>Produk/Service</th>
-                                <th>Jumlah</th>
-                                <th>Harga Satuan</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Keterangan</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider rounded-tl-xl">No</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Waktu</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Nama Customer</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Produk/Service</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Jumlah</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Harga Satuan</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Total</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Keterangan</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Bukti Penjualan</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider rounded-tr-xl">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="salesTableBody">
+                        <tbody id="sales-table-body" class="bg-white divide-y divide-slate-200">
+                            <!-- Data will be populated here by JavaScript -->
                             <tr>
-                                <td>1</td>
-                                <td>09:30</td>
-                                <td>PT ABC Corp</td>
-                                <td>AI Marketing Package</td>
-                                <td>1</td>
-                                <td>Rp 5,000,000</td>
-                                <td>Rp 5,000,000</td>
-                                <td>✅ Closing</td>
-                                <td>Deal sukses</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>11:15</td>
-                                <td>CV Digital Startup</td>
-                                <td>Growth Consultation</td>
-                                <td>3</td>
-                                <td>Rp 1,500,000</td>
-                                <td>Rp 4,500,000</td>
-                                <td>✅ Closing</td>
-                                <td>Follow up next month</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>14:20</td>
-                                <td>Toko Online Makmur</td>
-                                <td>Social Media Management</td>
-                                <td>1</td>
-                                <td>Rp 3,000,000</td>
-                                <td>Rp 3,000,000</td>
-                                <td>🔄 Follow Up</td>
-                                <td>Perlu presentasi ulang</td>
+                                <td colspan="11" class="text-center py-4 text-slate-500">
+                                    <span id="initial-message">Tambah penjualan baru untuk memulai!</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
-                <div class="summary-grid">
-                    <div class="summary-card success">
-                        <h4 id="totalSales">Rp 12,500,000</h4>
-                        <p>💰 Total Penjualan</p>
-                    </div>
-                    <div class="summary-card">
-                        <h4 id="totalProspects">8</h4>
-                        <p>👥 Total Prospek</p>
-                    </div>
-                    <div class="summary-card warning">
-                        <h4 id="conversionRate">62.5%</h4>
-                        <p>📈 Conversion Rate</p>
-                    </div>
-                    <div class="summary-card danger">
-                        <h4 id="targetAchievement">83.3%</h4>
-                        <p>🎯 Target Achievement</p>
-                    </div>
-                </div>
             </div>
 
-            <div class="btn-group">
-                <button class="btn btn-success" onclick="generateExcel()">
-                    <span>📊 Download Excel Report</span>
-                </button>
-                <button class="btn btn-primary" onclick="addSampleData()">
-                    <span>✨ Generate Sample Data</span>
-                </button>
-                <button class="btn btn-warning" onclick="clearData()">
-                    <span>🗑️ Reset Data</span>
-                </button>
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div id="totalSalesCard" class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg p-6 text-white text-center">
+                    <p class="text-sm opacity-90 mb-1">💰 Total Penjualan</p>
+                    <h3 id="totalSales" class="text-3xl font-extrabold">Rp 0</h3>
+                </div>
+                <div id="totalProspectsCard" class="bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white text-center">
+                    <p class="text-sm opacity-90 mb-1">👥 Total Prospek</p>
+                    <h3 id="totalProspects" class="text-3xl font-extrabold">0</h3>
+                </div>
+                <div id="conversionRateCard" class="bg-gradient-to-br from-pink-500 to-red-600 rounded-2xl shadow-lg p-6 text-white text-center">
+                    <p class="text-sm opacity-90 mb-1">📈 Conversion Rate</p>
+                    <h3 id="conversionRate" class="text-3xl font-extrabold">0%</h3>
+                </div>
+                <div id="targetAchievementCard" class="bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl shadow-lg p-6 text-white text-center">
+                    <p class="text-sm opacity-90 mb-1">🎯 Target Achievement</p>
+                    <h3 id="targetAchievement" class="text-3xl font-extrabold">0%</h3>
+                </div>
+            </div>
+            
+            <div id="firebase-user-id" class="mt-8 text-center text-slate-500 text-sm"></div>
+            
+        </div>
+    </div>
+    
+    <!-- Modal for Adding Sales -->
+    <div id="add-sales-modal" class="modal-overlay fixed inset-0 z-40 flex items-center justify-center p-4 hidden">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-lg transform scale-95 opacity-0 transition-all duration-300">
+            <h3 class="text-xl font-bold text-slate-800 mb-6 text-center">📝 Tambah Data Penjualan</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col">
+                    <label for="inputTime" class="text-sm font-medium text-slate-600 mb-2">Waktu</label>
+                    <input type="time" id="inputTime" class="p-3 border border-slate-300 rounded-xl">
+                </div>
+                <div class="flex flex-col">
+                    <label for="inputCustomer" class="text-sm font-medium text-slate-600 mb-2">Nama Customer</label>
+                    <input type="text" id="inputCustomer" class="p-3 border border-slate-300 rounded-xl" placeholder="Mis. PT. Maju Jaya">
+                </div>
+                <div class="flex flex-col">
+                    <label for="inputProduct" class="text-sm font-medium text-slate-600 mb-2">Produk/Service</label>
+                    <input type="text" id="inputProduct" class="p-3 border border-slate-300 rounded-xl" placeholder="Mis. Digital Marketing Package">
+                </div>
+                <div class="flex flex-col">
+                    <label for="inputQuantity" class="text-sm font-medium text-slate-600 mb-2">Jumlah</label>
+                    <input type="number" id="inputQuantity" class="p-3 border border-slate-300 rounded-xl" value="1">
+                </div>
+                <div class="flex flex-col">
+                    <label for="inputPrice" class="text-sm font-medium text-slate-600 mb-2">Harga Satuan (Rp)</label>
+                    <input type="number" id="inputPrice" class="p-3 border border-slate-300 rounded-xl" placeholder="Mis. 5000000">
+                </div>
+                <div class="flex flex-col">
+                    <label for="inputStatus" class="text-sm font-medium text-slate-600 mb-2">Status</label>
+                    <select id="inputStatus" class="p-3 border border-slate-300 rounded-xl">
+                        <option value="Closing">Closing</option>
+                        <option value="Follow Up">Follow Up</option>
+                        <option value="Nego">Nego</option>
+                        <option value="Prospek">Prospek</option>
+                    </select>
+                </div>
+                <div class="flex flex-col md:col-span-2">
+                    <label for="inputProof" class="text-sm font-medium text-slate-600 mb-2">Bukti Penjualan (Teks/URL)</label>
+                    <input type="text" id="inputProof" class="p-3 border border-slate-300 rounded-xl" placeholder="Mis. URL atau No. Invoice">
+                </div>
+                <div class="flex flex-col md:col-span-2">
+                    <label for="inputNote" class="text-sm font-medium text-slate-600 mb-2">Keterangan</label>
+                    <textarea id="inputNote" class="p-3 border border-slate-300 rounded-xl" rows="3" placeholder="Tambahkan keterangan tambahan..."></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end space-x-4 mt-6">
+                <button id="save-sales-btn" class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:bg-blue-700 transition-all">Simpan</button>
+                <button id="cancel-sales-btn" class="px-6 py-3 bg-slate-200 text-slate-700 font-semibold rounded-full shadow-lg hover:bg-slate-300 transition-all">Batal</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for Adding Salesperson -->
+    <div id="add-salesperson-modal" class="modal-overlay fixed inset-0 z-40 flex items-center justify-center p-4 hidden">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-sm transform scale-95 opacity-0 transition-all duration-300">
+            <h3 class="text-xl font-bold text-slate-800 mb-6 text-center">🧑‍💻 Tambah Nama Sales Baru</h3>
+            <div class="flex flex-col space-y-4">
+                <input type="text" id="newSalespersonName" class="p-3 border border-slate-300 rounded-xl" placeholder="Masukkan nama sales baru">
+                <div class="flex justify-end space-x-4 mt-4">
+                    <button id="save-new-salesperson-btn" class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-full shadow-lg hover:bg-indigo-700 transition-all">Simpan</button>
+                    <button id="cancel-new-salesperson-btn" class="px-6 py-3 bg-slate-200 text-slate-700 font-semibold rounded-full shadow-lg hover:bg-slate-300 transition-all">Batal</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="./script.js"></script>
+    <!-- Firebase Libraries -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- External JavaScript -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
