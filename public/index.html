@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Sales Report Generator - Genius Growth AI</title>
+    <meta name="description" content="Generate professional Excel sales reports for Genius Growth AI team">
+    <meta name="keywords" content="sales report, excel generator, genius growth ai, daily sales">
+    <meta name="author" content="Genius Growth AI">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🚀 Genius Growth AI</h1>
+                <p>Excel Sales Report Generator</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <h3 style="margin-bottom: 20px; color: #2c3e50; text-align: center;">📊 Setup Report Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>🗓️ Tanggal Report</label>
+                        <input type="date" id="reportDate">
+                    </div>
+                    <div class="form-group">
+                        <label>👤 Nama Sales</label>
+                        <input type="text" id="salesName" placeholder="Masukkan nama sales">
+                    </div>
+                    <div class="form-group">
+                        <label>🎯 Target Harian (Rp)</label>
+                        <input type="number" id="dailyTarget" placeholder="Target penjualan">
+                    </div>
+                    <div class="form-group">
+                        <label>📍 Area/Wilayah</label>
+                        <input type="text" id="salesArea" placeholder="Area kerja">
+                    </div>
+                    <div class="form-group">
+                        <label>🏢 Tim/Divisi</label>
+                        <input type="text" id="salesTeam" placeholder="Nama tim">
+                    </div>
+                    <div class="form-group">
+                        <label>📱 Kontak Sales</label>
+                        <input type="text" id="salesContact" placeholder="No. HP/Email">
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <h3>📋 Preview Data Penjualan</h3>
+                <div class="table-container">
+                    <table id="salesTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Waktu</th>
+                                <th>Nama Customer</th>
+                                <th>Produk/Service</th>
+                                <th>Jumlah</th>
+                                <th>Harga Satuan</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesTableBody">
+                            <tr>
+                                <td>1</td>
+                                <td>09:30</td>
+                                <td>PT ABC Corp</td>
+                                <td>AI Marketing Package</td>
+                                <td>1</td>
+                                <td>Rp 5,000,000</td>
+                                <td>Rp 5,000,000</td>
+                                <td>✅ Closing</td>
+                                <td>Deal sukses</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>11:15</td>
+                                <td>CV Digital Startup</td>
+                                <td>Growth Consultation</td>
+                                <td>3</td>
+                                <td>Rp 1,500,000</td>
+                                <td>Rp 4,500,000</td>
+                                <td>✅ Closing</td>
+                                <td>Follow up next month</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>14:20</td>
+                                <td>Toko Online Makmur</td>
+                                <td>Social Media Management</td>
+                                <td>1</td>
+                                <td>Rp 3,000,000</td>
+                                <td>Rp 3,000,000</td>
+                                <td>🔄 Follow Up</td>
+                                <td>Perlu presentasi ulang</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="summary-card success">
+                        <h4 id="totalSales">Rp 12,500,000</h4>
+                        <p>💰 Total Penjualan</p>
+                    </div>
+                    <div class="summary-card">
+                        <h4 id="totalProspects">8</h4>
+                        <p>👥 Total Prospek</p>
+                    </div>
+                    <div class="summary-card warning">
+                        <h4 id="conversionRate">62.5%</h4>
+                        <p>📈 Conversion Rate</p>
+                    </div>
+                    <div class="summary-card danger">
+                        <h4 id="targetAchievement">83.3%</h4>
+                        <p>🎯 Target Achievement</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="generateExcel()">
+                    <span>📊 Download Excel Report</span>
+                </button>
+                <button class="btn btn-primary" onclick="addSampleData()">
+                    <span>✨ Generate Sample Data</span>
+                </button>
+                <button class="btn btn-warning" onclick="clearData()">
+                    <span>🗑️ Reset Data</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
